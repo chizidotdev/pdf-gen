@@ -14,7 +14,7 @@ function AccordionContainer({ children }: AccordionProps) {
 }
 
 function AccordionItem({ children }: AccordionItemProps) {
-    const [isActive, toggleActive] = useReducer((state) => !state, true);
+    const [isActive, toggleActive] = useReducer((state) => !state, false);
     const onClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
         e.preventDefault();
         toggleActive();
@@ -22,7 +22,7 @@ function AccordionItem({ children }: AccordionItemProps) {
 
     return (
         <div className='border p-5 rounded-md'>
-            <button onClick={onClick}>
+            <button onClick={onClick} className='flex justify-between w-full'>
                 {isActive ? <HiOutlineChevronDown /> : <HiOutlineChevronUp />}
             </button>
             {isActive && <div className='flex flex-col gap-4 mt-2'>{children}</div>}

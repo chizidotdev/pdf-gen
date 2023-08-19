@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import Accordion from './accordion';
 import { FormData, useForm } from './form.context';
 import Input from './input';
 import Textarea from './textarea';
-import { HiOutlinePlus } from 'react-icons/hi';
+import { HiOutlinePlus, HiTrash } from 'react-icons/hi';
 
 export function Form() {
     return (
@@ -11,22 +12,63 @@ export function Form() {
 
             <Experience />
 
-            <div className='flex flex-col gap-4'>
-                <h1 className='text-xl font-bold text-white'>Skills & Specialization</h1>
-                <Input name='skills' label='Skills' />
-            </div>
+            <Skills />
 
             <Education />
 
-            <div className='flex flex-col gap-4'>
-                <h1 className='text-xl font-bold text-white'>Links</h1>
-                <div className='grid gap-4'>
-                    <Input name='linkedin' label='LinkedIn' />
-                    <Input name='github' label='GitHub' />
-                    <Input name='portfolio' label='Portfolio' />
-                </div>
-            </div>
+            <Links />
         </form>
+    );
+}
+
+function Skills() {
+    const {
+        formData: { skills },
+        setFormData,
+    } = useForm();
+    const [skill, setSkill] = useState('');
+
+    const addSkill: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+        e.preventDefault();
+        if (!skill) return;
+
+        setFormData({ skills: [...skills, skill] });
+    };
+
+    return (
+        <div className='flex flex-col gap-4'>
+            <h1 className='text-xl font-bold text-white'>Skills & Specialization</h1>
+
+            <div>
+                <Input value={skill} onChange={(e) => setSkill(e.target.value)} label='Skills' />
+                <button
+                    className='flex mt-2 items-center justify-center bg-slate-800 rounded p-2 px-4'
+                    onClick={addSkill}
+                >
+                    Add &nbsp;
+                    <HiOutlinePlus />
+                </button>
+            </div>
+
+            <div className='flex flex-wrap gap-3'>
+                {skills.map((skill, index) => (
+                    <div key={index} className='flex gap-2 border rounded p-2 items-center'>
+                        <span>{skill}</span>
+                        <button
+                            className='text-slate-500 h-6 w-5'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const newSkills = [...skills];
+                                newSkills.splice(index, 1);
+                                setFormData({ skills: newSkills });
+                            }}
+                        >
+                            <HiTrash />
+                        </button>
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 }
 
@@ -68,7 +110,11 @@ function Experience() {
         setFormData,
     } = useForm();
 
-    const updateExperience = (index: number, key: keyof FormData['experience'][0], value: string) => {
+    const updateExperience = (
+        index: number,
+        key: keyof FormData['experience'][0],
+        value: string
+    ) => {
         const newExperience = [...experience];
         newExperience[index][key] = value;
         setFormData({ experience: newExperience });
@@ -220,6 +266,58 @@ function Education() {
                     </Accordion.Item>
                 ))}
             </Accordion>
+        </div>
+    );
+}
+
+function Links() {
+    const {
+        formData: { links },
+        setFormData,
+    } = useForm();
+
+    const updateLink = (index: number, value: string) => {
+        const newLinks = [...links];
+        newLinks[index] = value;
+        setFormData({ links: newLinks });
+    };
+
+    const addLink: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+        e.preventDefault();
+        const newLinks = [...links];
+        newLinks.push('');
+        setFormData({ links: newLinks });
+    };
+
+    return (
+        <div className='flex flex-col gap-4'>
+            <div className='flex justify-between'>
+                <h1 className='text-xl font-bold text-white'>Links</h1>
+                <button onClick={addLink} className='btn btn-primary'>
+                    <HiOutlinePlus />
+                </button>
+            </div>
+            <div className='grid grid-cols-2 gap-4'>
+                {links.map((link, index) => (
+                    <div key={index} className='flex gap-3 items-center'>
+                        <Input
+                            value={link}
+                            onChange={(e) => updateLink(index, e.target.value)}
+                        />
+                        <button
+                            className='text-slate-500 h-10 w-5'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const newLinks = [...links];
+                                newLinks.splice(index, 1);
+                                setFormData({ links: newLinks });
+                            }}
+                        >
+                            <HiTrash />
+                        </button>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
