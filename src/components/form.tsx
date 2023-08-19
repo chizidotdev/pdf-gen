@@ -1,5 +1,5 @@
 import Accordion from './accordion';
-import { useForm } from './form.context';
+import { FormData, useForm } from './form.context';
 import Input from './input';
 import Textarea from './textarea';
 import { HiOutlinePlus } from 'react-icons/hi';
@@ -68,7 +68,7 @@ function Experience() {
         setFormData,
     } = useForm();
 
-    const updateExperience = (index: number, key: string, value: string) => {
+    const updateExperience = (index: number, key: keyof FormData['experience'][0], value: string) => {
         const newExperience = [...experience];
         newExperience[index][key] = value;
         setFormData({ experience: newExperience });
@@ -152,7 +152,7 @@ function Education() {
         setFormData,
     } = useForm();
 
-    const updateEducation = (index: number, key: string, value: string) => {
+    const updateEducation = (index: number, key: keyof FormData['education'][0], value: string) => {
         const newEducation = [...education];
         newEducation[index][key] = value;
         setFormData({ education: newEducation });
