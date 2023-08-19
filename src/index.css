@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.section-header {
+    @apply text-xl relative flex items-center gap-4;
+}
+
+.item-header {
+    @apply font-semibold 
+}
+
+.section-header::after {
+    @apply block w-full h-[1px] bg-slate-300 top-1/2 left-20;
+    content: '';
+}
